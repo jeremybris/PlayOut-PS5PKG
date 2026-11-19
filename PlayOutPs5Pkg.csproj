@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PlayOut's PS5 package helper (see README.md): unpacks fake/debug PS5 packages with PS5PKGTool's own extraction
+       (PS5PKGTool.Core, GPL-3.0). Built by build.mjs (`node build.mjs`; PlayOut runs it from
+       scripts/build-ps5pkg-helper.mjs) into dist/: one self-contained win-x64 file, so users need no .NET install.
+       build.mjs fetches PS5PKGTool and ProsperoPkgTool into vendor/ at the commits pinned in it. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>PlayOutPs5Pkg</AssemblyName>
+    <RootNamespace>PlayOutPs5Pkg</RootNamespace>
+    <Version>1.0.0</Version>
+    <Product>PlayOut PS5 package helper</Product>
+    <Description>Unpacks fake/debug PS5 packages into game folders for PlayOut (PS5PKGTool.Core).</Description>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!-- vendor/ holds the upstream source (built through the ProjectReference, never compiled into this project). -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);vendor/**;dist/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <!-- Not trimmed: ProsperoPkgTool (built from source by build.mjs) and PS5PKGTool.Core are not annotated for trimming. -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="vendor\PS5PKGTool\PS5PKGTool.Core\PS5PKGTool.Core.csproj" />
+  </ItemGroup>
+</Project>
